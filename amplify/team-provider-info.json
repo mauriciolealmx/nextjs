@@ -1,0 +1,15 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-fivegoodpoints-staging-30939-authRole",
+      "UnauthRoleArn": "arn:aws:iam::226257844371:role/amplify-fivegoodpoints-staging-30939-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::226257844371:role/amplify-fivegoodpoints-staging-30939-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-fivegoodpoints-staging-30939-deployment",
+      "UnauthRoleName": "amplify-fivegoodpoints-staging-30939-unauthRole",
+      "StackName": "amplify-fivegoodpoints-staging-30939",
+      "StackId": "arn:aws:cloudformation:us-east-1:226257844371:stack/amplify-fivegoodpoints-staging-30939/fa3a4840-39cb-11eb-a204-0a00c5160c23",
+      "AmplifyAppId": "d26fvbr0eiy5je"
+    }
+  }
+}
