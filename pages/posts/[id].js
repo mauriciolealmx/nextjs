@@ -1,41 +1,60 @@
 import Head from 'next/head';
+import Markdown from 'react-markdown';
+import { useRouter } from 'next/router';
+import { withSSRContext } from 'aws-amplify';
 
 import Date from '../../components/date';
 import Layout from '../../components/layout';
-import { getAllPostIds, getPostData } from '../../lib/posts';
+import { Post } from '../../models';
 
 import utilStyles from '../../styles/utils.module.css';
 
-export default function Post({ postData }) {
+export default function PostComp({ post }) {
+  const router = useRouter();
+
+  if (router.isFallback) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <Layout>
       <Head>
-        <title>{postData.title}</title>
+        <title>{post.title}</title>
       </Head>
       <article>
-        <h1 className={utilStyles.headingXl}>{postData.title}</h1>
+        <h1 className={utilStyles.headingXl}>{post.title}</h1>
         <div className={utilStyles.lightText}>
-          <Date dateString={postData.date} />
+          <Date lastChangedAtInMS={post._lastChangedAt} />
         </div>
-        <div dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
+        <Markdown children={post.content} />
       </article>
     </Layout>
   );
 }
 
-export async function getStaticPaths() {
-  const paths = getAllPostIds();
+export async function getStaticPaths(req) {
+  const { DataStore } = withSSRContext(req);
+  const posts = await DataStore.query(Post);
+  const paths = posts.map((post) => ({ params: { id: post.id } }));
+
   return {
     paths,
-    fallback: false,
+    fallback: true,
   };
 }
 
-export async function getStaticProps({ params }) {
-  const postData = await getPostData(params.id);
+export async function getStaticProps(req) {
+  const { DataStore } = withSSRContext(req);
+  const {
+    params: { id },
+  } = req;
+
+  const post = await DataStore.query(Post, id);
+
   return {
     props: {
-      postData,
+      post: JSON.parse(JSON.stringify(post)),
     },
+    revalidate: 100,
   };
 }
