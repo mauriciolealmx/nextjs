@@ -3,8 +3,8 @@ import styles from './layout.module.css';
 import utilStyles from '../styles/utils.module.css';
 import Link from 'next/link';
 
-const name = 'Your Name';
-export const siteTitle = 'Next.js Sample Website';
+const name = 'Five good reasons why';
+export const siteTitle = 'Five good reasons why';
 
 export default function Layout({ children, home }) {
   return (
@@ -13,7 +13,7 @@ export default function Layout({ children, home }) {
         <link rel="icon" href="/favicon.ico" />
         <meta
           name="description"
-          content="Learn how to build a personal website using Next.js"
+          content="Should you or should you not? Find five good reasons why."
         />
         <meta
           property="og:image"
