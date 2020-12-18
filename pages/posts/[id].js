@@ -9,12 +9,19 @@ import { Post } from '../../models';
 
 import utilStyles from '../../styles/utils.module.css';
 
+const blueHostId = '4ba61ce6-36a3-4b38-a7f4-91c201408dbf';
+const linkUrl = 'https://www.bluehost.com/track/mauricioleal/googleAds';
+const imgSrc =
+  'https://bluehost-cdn.com/media/partner/images/mauricioleal/760x80/760x80BW.png';
+
 export default function PostComp({ post }) {
   const router = useRouter();
 
   if (router.isFallback) {
     return <div>Loading...</div>;
   }
+
+  const isBluehost = post.id === blueHostId;
 
   return (
     <Layout>
@@ -28,6 +35,11 @@ export default function PostComp({ post }) {
         </div>
         <Markdown children={post.content} />
       </article>
+      {isBluehost && (
+        <a href={linkUrl} target="_blank">
+          <img border="0" src={imgSrc} />
+        </a>
+      )}
     </Layout>
   );
 }

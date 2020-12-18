@@ -23,6 +23,13 @@ export const schema = {
                     "type": "String",
                     "isRequired": false,
                     "attributes": []
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": []
                 }
             },
             "syncable": true,
@@ -51,5 +58,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "37f5dba166fdd2a7359759d4f4a14bf4"
+    "version": "25d84d699971189c8b184c5cf66e554c"
 };
