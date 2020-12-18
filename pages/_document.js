@@ -1,6 +1,6 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 
-import { GA_TRACKING_ID } from '../lib/gtag';
+import { GA_TRACKING_ID, UA_TRACKING_ID } from '../lib/gtag';
 
 const gtagScript = `
   window.dataLayer = window.dataLayer || [];
@@ -9,6 +9,8 @@ const gtagScript = `
   gtag('config', '${GA_TRACKING_ID}', {
     page_path: window.location.pathname,
   });
+
+  gtag('config', '${UA_TRACKING_ID}');
 `;
 
 export default class MyDocument extends Document {
