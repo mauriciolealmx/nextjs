@@ -7,9 +7,10 @@ import Date from '../../components/date';
 import Layout from '../../components/layout';
 import { Post } from '../../models';
 
+import styles from './post.module.css';
 import utilStyles from '../../styles/utils.module.css';
 
-const blueHostId = '4ba61ce6-36a3-4b38-a7f4-91c201408dbf';
+const blueHostId = 'fa4e1c36-bf99-400b-8c82-348589912807';
 const linkUrl = 'https://www.bluehost.com/track/mauricioleal/googleAds';
 const imgSrc =
   'https://bluehost-cdn.com/media/partner/images/mauricioleal/760x80/760x80BW.png';
@@ -33,7 +34,15 @@ export default function PostComp({ post }) {
         <div className={utilStyles.lightText}>
           <Date lastChangedAtInMS={post._lastChangedAt} />
         </div>
-        <Markdown children={post.content} />
+        {post.reasons ? (
+          <ol>
+            {post.reasons.map((reason) => (
+              <li className={styles.reason}>{reason.title}</li>
+            ))}
+          </ol>
+        ) : (
+          <Markdown children={post.content} />
+        )}
       </article>
       {isBluehost && (
         <a href={linkUrl} target="_blank">

@@ -10,7 +10,6 @@ import { Post } from '../models';
 
 export default function Home({ allPosts }) {
   const [posts, setPosts] = useState(allPosts);
-  console.log({ allPosts });
 
   useEffect(() => {
     async function fetchPosts() {
