@@ -91,9 +91,16 @@ export const schema = {
                     "type": "Int",
                     "isRequired": false,
                     "attributes": []
+                },
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
                 }
             }
         }
     },
-    "version": "f6db03ba884c32f0732bc525c1c73551"
+    "version": "d85ef96380a47c521e34933b8f786a46"
 };

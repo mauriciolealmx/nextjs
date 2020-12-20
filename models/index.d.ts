@@ -6,6 +6,7 @@ export declare class Reason {
   readonly title?: string;
   readonly description?: string;
   readonly votes?: number;
+  readonly id?: string;
   constructor(init: ModelInit<Reason>);
 }
 
