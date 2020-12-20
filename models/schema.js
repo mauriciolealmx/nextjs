@@ -30,6 +30,16 @@ export const schema = {
                     "type": "AWSDateTime",
                     "isRequired": false,
                     "attributes": []
+                },
+                "reasons": {
+                    "name": "reasons",
+                    "isArray": true,
+                    "type": {
+                        "nonModel": "Reason"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true
                 }
             },
             "syncable": true,
@@ -57,6 +67,33 @@ export const schema = {
         }
     },
     "enums": {},
-    "nonModels": {},
-    "version": "25d84d699971189c8b184c5cf66e554c"
+    "nonModels": {
+        "Reason": {
+            "name": "Reason",
+            "fields": {
+                "title": {
+                    "name": "title",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "description": {
+                    "name": "description",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "votes": {
+                    "name": "votes",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                }
+            }
+        }
+    },
+    "version": "f6db03ba884c32f0732bc525c1c73551"
 };

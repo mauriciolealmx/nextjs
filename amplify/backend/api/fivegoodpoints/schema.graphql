@@ -1,7 +1,13 @@
+type Reason {
+  title: String
+  description: String
+  votes: Int
+}
+
 type Post @model @auth(rules: [{ allow: public, operations: [create, read] }]) {
   id: ID!
   title: String
   content: String
   createdAt: AWSDateTime
+  reasons: [Reason]
 }
- 
