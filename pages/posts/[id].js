@@ -37,7 +37,12 @@ export default function PostComp({ post }) {
         {post.reasons ? (
           <ol>
             {post.reasons.map((reason, idx) => (
-              <Reason key={reason.id} reason={{ ...reason }} index={idx + 1} />
+              <Reason
+                key={idx}
+                reason={{ ...reason }}
+                post={post}
+                index={idx + 1}
+              />
             ))}
           </ol>
         ) : (
