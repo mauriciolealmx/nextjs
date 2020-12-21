@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import Head from 'next/head';
 import Markdown from 'react-markdown';
 import { DataStore } from '@aws-amplify/datastore';
@@ -17,6 +17,36 @@ const linkUrl = 'https://www.bluehost.com/track/mauricioleal/googleAds';
 const imgSrc =
   'https://bluehost-cdn.com/media/partner/images/mauricioleal/760x80/760x80BW.png';
 
+const fixReasons = [
+  {
+    title:
+      'Free domain name included with your purchase (1 domain name, 1 year)',
+    votes: 0,
+    description: '',
+  },
+  {
+    title: 'Unlimited Email Accounts and Email Storage',
+    votes: 0,
+    description: '',
+  },
+  {
+    title:
+      'eCommerce features with multiple shopping carts and Free SSL security',
+    votes: 0,
+    description: '',
+  },
+  {
+    title: 'Excellent security features',
+    votes: 0,
+    description: '',
+  },
+  {
+    title: 'WordPress hosting on Bluehost is considered to be top-notch',
+    votes: 0,
+    description: '',
+  },
+];
+
 export default function PostComp({ post }) {
   const [postState, setPost] = useState(post);
   const router = useRouter();
@@ -27,25 +57,14 @@ export default function PostComp({ post }) {
 
   const isBluehost = postState.id === blueHostId;
 
-  useEffect(() => {
-    const copy = [...postState.reasons];
-    const sorted = copy.sort((a, b) => b.votes - a.votes);
-    setPost((prevState) => {
-      return {
-        ...prevState,
-        reasons: sorted,
-      };
-    });
-  }, []);
-
   // TODO: reasonTitle should be id
-  const handleVote = async (voteValue, reason) => {
+  const handleVote = useCallback(async (voteValue, title) => {
     const original = await DataStore.query(Post, postState.id);
 
     const updatedPost = await DataStore.save(
       Post.copyOf(original, (item) => {
         const newReasons = item.reasons.map((cloudReason) => {
-          if (cloudReason.title === reason.title) {
+          if (cloudReason.title === title) {
             cloudReason.votes += voteValue;
           }
           return cloudReason;
@@ -56,10 +75,17 @@ export default function PostComp({ post }) {
       })
     );
 
-    const copy = [...updatedPost.reasons];
-    const sorted = copy.sort((a, b) => b.votes - a.votes);
-    setPost({ ...updatedPost, reasons: sorted });
-  };
+    const reasonsCopy = [...updatedPost.reasons];
+    const sortedReasons = reasonsCopy.sort((a, b) => b.votes - a.votes);
+    setPost({ ...updatedPost, reasons: sortedReasons });
+  }, []);
+
+  let reasonsCopy;
+  let sortedReasons;
+  if (postState.reasons) {
+    reasonsCopy = [...postState.reasons];
+    sortedReasons = reasonsCopy.sort((a, b) => b.votes - a.votes);
+  }
 
   return (
     <Layout>
@@ -71,18 +97,9 @@ export default function PostComp({ post }) {
         <div className={utilStyles.lightText}>
           <Date lastChangedAtInMS={post._lastChangedAt} />
         </div>
-        {postState.reasons ? (
-          <ol>
-            {postState.reasons?.map((reason, idx) => (
-              <Reason
-                key={idx}
-                reason={reason}
-                post={post}
-                index={idx + 1}
-                onVote={handleVote}
-              />
-            ))}
-          </ol>
+
+        {sortedReasons?.length > 0 ? (
+          <Reason onVote={handleVote} sortedReasons={sortedReasons} />
         ) : (
           <Markdown children={post.content} />
         )}

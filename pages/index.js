@@ -9,21 +9,6 @@ import utilStyles from '../styles/utils.module.css';
 import { Post } from '../models';
 
 export default function Home({ allPosts }) {
-  const [posts, setPosts] = useState(allPosts);
-
-  useEffect(() => {
-    async function fetchPosts() {
-      const postData = await DataStore.query(Post);
-      setPosts(postData);
-    }
-
-    const subscription = DataStore.observe(Post).subscribe(() => {
-      fetchPosts();
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
   return (
     <Layout home>
       <Head>
@@ -32,8 +17,8 @@ export default function Home({ allPosts }) {
       <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
         <h2 className={utilStyles.headingLg}>You should:</h2>
         <ul className={utilStyles.list}>
-          {posts.length > 0 &&
-            posts?.map((post) => (
+          {allPosts.length > 0 &&
+            allPosts?.map((post) => (
               <li className={utilStyles.listItem} key={post.id}>
                 <Link href={`/posts/${post.id}`}>
                   <a>{post.title}</a>

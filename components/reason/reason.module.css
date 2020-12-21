@@ -26,6 +26,7 @@
   box-shadow: none;
   cursor: default;
   user-select: auto;
+  cursor: pointer;
 }
 
 .btVote {
@@ -34,4 +35,8 @@
 
 .rotated {
   transform: rotate(180deg);
+}
+
+.voted {
+  fill: #e47a0f;
 }
