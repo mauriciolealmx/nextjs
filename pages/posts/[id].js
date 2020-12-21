@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Markdown from 'react-markdown';
+import { DataStore } from '@aws-amplify/datastore';
 import { useRouter } from 'next/router';
 import { withSSRContext } from 'aws-amplify';
 
@@ -10,19 +12,54 @@ import { Post } from '../../models';
 
 import utilStyles from '../../styles/utils.module.css';
 
-const blueHostId = 'fa4e1c36-bf99-400b-8c82-348589912807';
+const blueHostId = '0008c2c3-67c3-4df3-8ead-535d6f577650';
 const linkUrl = 'https://www.bluehost.com/track/mauricioleal/googleAds';
 const imgSrc =
   'https://bluehost-cdn.com/media/partner/images/mauricioleal/760x80/760x80BW.png';
 
 export default function PostComp({ post }) {
+  const [postState, setPost] = useState(post);
   const router = useRouter();
 
   if (router.isFallback) {
     return <div>Loading...</div>;
   }
 
-  const isBluehost = post.id === blueHostId;
+  const isBluehost = postState.id === blueHostId;
+
+  useEffect(() => {
+    const copy = [...postState.reasons];
+    const sorted = copy.sort((a, b) => b.votes - a.votes);
+    setPost((prevState) => {
+      return {
+        ...prevState,
+        reasons: sorted,
+      };
+    });
+  }, []);
+
+  // TODO: reasonTitle should be id
+  const handleVote = async (voteValue, reason) => {
+    const original = await DataStore.query(Post, postState.id);
+
+    const updatedPost = await DataStore.save(
+      Post.copyOf(original, (item) => {
+        const newReasons = item.reasons.map((cloudReason) => {
+          if (cloudReason.title === reason.title) {
+            cloudReason.votes += voteValue;
+          }
+          return cloudReason;
+        });
+
+        item.reasons = newReasons;
+        return item;
+      })
+    );
+
+    const copy = [...updatedPost.reasons];
+    const sorted = copy.sort((a, b) => b.votes - a.votes);
+    setPost({ ...updatedPost, reasons: sorted });
+  };
 
   return (
     <Layout>
@@ -34,14 +71,15 @@ export default function PostComp({ post }) {
         <div className={utilStyles.lightText}>
           <Date lastChangedAtInMS={post._lastChangedAt} />
         </div>
-        {post.reasons ? (
+        {postState.reasons ? (
           <ol>
-            {post.reasons.map((reason, idx) => (
+            {postState.reasons?.map((reason, idx) => (
               <Reason
                 key={idx}
-                reason={{ ...reason }}
+                reason={reason}
                 post={post}
                 index={idx + 1}
+                onVote={handleVote}
               />
             ))}
           </ol>
