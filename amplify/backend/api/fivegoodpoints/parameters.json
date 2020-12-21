@@ -1,5 +1,5 @@
 {
-  "AppSyncApiName": "fivegoodpoints",
-  "DynamoDBBillingMode": "PAY_PER_REQUEST",
-  "DynamoDBEnableServerSideEncryption": false
+    "AppSyncApiName": "fivegoodpoints",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "DynamoDBEnableServerSideEncryption": false
 }
