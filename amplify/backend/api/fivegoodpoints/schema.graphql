@@ -5,7 +5,9 @@ type Reason {
   id: ID
 }
 
-type Post @model @auth(rules: [{ allow: public, operations: [create, read] }]) {
+type Post
+  @model
+  @auth(rules: [{ allow: public, operations: [create, read, update] }]) {
   id: ID!
   title: String
   content: String
