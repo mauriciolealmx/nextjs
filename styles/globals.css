@@ -24,3 +24,7 @@ img {
   max-width: 100%;
   display: block;
 }
+
+ol {
+  padding: 0;
+}

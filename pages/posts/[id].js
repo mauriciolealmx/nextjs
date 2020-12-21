@@ -5,9 +5,9 @@ import { withSSRContext } from 'aws-amplify';
 
 import Date from '../../components/date';
 import Layout from '../../components/layout';
+import Reason from '../../components/reason/reason';
 import { Post } from '../../models';
 
-import styles from './post.module.css';
 import utilStyles from '../../styles/utils.module.css';
 
 const blueHostId = 'fa4e1c36-bf99-400b-8c82-348589912807';
@@ -36,8 +36,8 @@ export default function PostComp({ post }) {
         </div>
         {post.reasons ? (
           <ol>
-            {post.reasons.map((reason) => (
-              <li className={styles.reason}>{reason.title}</li>
+            {post.reasons.map((reason, idx) => (
+              <Reason key={reason.id} reason={{ ...reason }} index={idx + 1} />
             ))}
           </ol>
         ) : (
