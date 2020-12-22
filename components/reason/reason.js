@@ -29,7 +29,7 @@ export default function Reason({ onVote, sortedReasons }) {
       {sortedReasons.map((reason, idx) => {
         return (
           <li key={reason.title} className={styles.reasonRoot}>
-            {/* <div className={styles.votingRoot}>
+            <div className={styles.votingRoot}>
               <button
                 className={`${styles.textButton}`}
                 onClick={debounce(
@@ -57,7 +57,7 @@ export default function Reason({ onVote, sortedReasons }) {
                   }`}
                 />
               </button>
-            </div> */}
+            </div>
             <span className={styles.marker}>{idx + 1}.</span>
             {reason?.title}
           </li>
