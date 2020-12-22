@@ -113,18 +113,7 @@ export default function PostComp({ post }) {
   );
 }
 
-export async function getStaticPaths(req) {
-  const { DataStore } = withSSRContext(req);
-  const posts = await DataStore.query(Post);
-  const paths = posts.map((post) => ({ params: { id: post.id } }));
-
-  return {
-    paths,
-    fallback: true,
-  };
-}
-
-export async function getStaticProps(req) {
+export async function getServerSideProps(req) {
   const { DataStore } = withSSRContext(req);
   const {
     params: { id },
@@ -136,6 +125,5 @@ export async function getStaticProps(req) {
     props: {
       post: JSON.parse(JSON.stringify(post)),
     },
-    revalidate: 100,
   };
 }
