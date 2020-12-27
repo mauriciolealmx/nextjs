@@ -5,6 +5,7 @@ import { DataStore } from '@aws-amplify/datastore';
 import { useRouter } from 'next/router';
 import { withSSRContext } from 'aws-amplify';
 
+import BlueHost from '../../components/blueHost/blueHost';
 import Date from '../../components/date';
 import Layout from '../../components/layout';
 import Reason from '../../components/reason/reason';
@@ -104,11 +105,7 @@ export default function PostComp({ post }) {
           <Markdown children={post.content} />
         )}
       </article>
-      {isBluehost && (
-        <a href={linkUrl} target="_blank">
-          <img border="0" src={imgSrc} />
-        </a>
-      )}
+      {isBluehost && <BlueHost />}
     </Layout>
   );
 }
