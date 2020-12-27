@@ -1,6 +1,6 @@
 .reasonRoot {
   display: grid;
-  grid-template-columns: 30px 30px auto;
+  grid-template-columns: 45px 30px auto;
   list-style-type: none;
   padding: 11px 0;
 }
@@ -8,6 +8,8 @@
 .votingRoot {
   justify-items: center;
   display: grid;
+  border-right: 1px solid #ddd;
+  padding-right: 5px;
 }
 
 .marker {
@@ -39,4 +41,14 @@
 
 .voted {
   fill: #e47a0f;
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+}
+
+.label span {
+  text-align: center;
+  font-size: 14px;
 }

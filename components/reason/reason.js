@@ -43,7 +43,10 @@ export default function Reason({ onVote, sortedReasons }) {
                   }`}
                 />
               </button>
-              <span>{reason?.votes}</span>
+              <div className={styles.label}>
+                <span>{reason?.votes}</span>
+                <span>votes</span>
+              </div>
               <button
                 className={`${styles.textButton} ${styles.rotated}`}
                 onClick={debounce(
