@@ -15,7 +15,7 @@ import utilStyles from '../../styles/utils.module.css';
 const blueHostId = '0008c2c3-67c3-4df3-8ead-535d6f577650';
 const linkUrl = 'https://www.bluehost.com/track/mauricioleal/googleAds';
 const imgSrc =
-  'https://bluehost-cdn.com/media/partner/images/mauricioleal/760x80/760x80BW.png';
+  'https://bluehost-cdn.com/media/partner/images/mauricioleal/728x90/728x90BW.png';
 
 const fixReasons = [
   {
