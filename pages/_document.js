@@ -24,6 +24,11 @@ export default class MyDocument extends Document {
             src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
           />
           <script dangerouslySetInnerHTML={{ __html: gtagScript }} />
+          <script
+            data-ad-client="ca-pub-1047254196375080"
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+          ></script>
         </Head>
         <body>
           <Main />
