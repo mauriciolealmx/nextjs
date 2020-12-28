@@ -61,8 +61,7 @@ export default function Reason({ onVote, sortedReasons }) {
                 />
               </button>
             </div>
-            <span className={styles.marker}>{idx + 1}.</span>
-            {reason?.title}
+            <p className={styles.reasonTitle}>{`${idx + 1}. ${reason?.title}`}</p>
           </li>
         );
       })}

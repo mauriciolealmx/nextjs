@@ -3,7 +3,7 @@ import styles from './layout.module.css';
 import utilStyles from '../styles/utils.module.css';
 import Link from 'next/link';
 
-const name = 'Five good reasons why';
+const name = '5 good reasons why';
 export const siteTitle = 'Five good reasons why';
 
 export default function Layout({ children, home }) {
@@ -25,6 +25,9 @@ export default function Layout({ children, home }) {
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
       <header className={styles.header}>
+        <div className={styles.headerBanner}>
+          <Link href="/">{name}</Link>
+        </div>
         {home ? (
           <>
             <img
@@ -35,25 +38,18 @@ export default function Layout({ children, home }) {
             <h1 className={utilStyles.heading2Xl}>{name}</h1>
           </>
         ) : (
-          <>
-            <Link href="/">
-              <a>
-                <img
-                  src="/images/profile.jpg"
-                  className={`${styles.headerImage} ${utilStyles.borderCircle}`}
-                  alt={name}
-                />
-              </a>
-            </Link>
-            <h2 className={utilStyles.headingLg}>
-              <Link href="/">
-                <a className={utilStyles.colorInherit}>{name}</a>
-              </Link>
-            </h2>
-          </>
+          <Link href="/">
+            <a>
+              <img
+                src="/images/profile.jpg"
+                className={`${styles.headerImage} ${utilStyles.borderCircle}`}
+                alt={name}
+              />
+            </a>
+          </Link>
         )}
       </header>
-      <main>{children}</main>
+      <main className={styles.main}>{children}</main>
       {!home && (
         <div className={styles.backToHome}>
           <Link href="/">
