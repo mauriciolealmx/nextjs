@@ -15,7 +15,6 @@ export default function Home({ allPosts }) {
         <title>{siteTitle}</title>
       </Head>
       <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
-        <h2 className={utilStyles.headingLg}>You should:</h2>
         <ul className={utilStyles.list}>
           {allPosts.length > 0 &&
             allPosts?.map((post) => (

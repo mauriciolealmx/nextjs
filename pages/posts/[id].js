@@ -95,7 +95,7 @@ export default function PostComp({ post }) {
         <title>{post.title}</title>
       </Head>
       <article>
-        <h1 className={utilStyles.headingXl}>{post.title}</h1>
+        <h1 className={utilStyles.headingMd}>{post.title}</h1>
         <div className={utilStyles.lightText}>
           <Date lastChangedAtInMS={post._lastChangedAt} />
         </div>

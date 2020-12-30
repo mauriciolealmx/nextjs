@@ -41,7 +41,7 @@
 
 .btVote {
   height: 100%;
-  fill: #888888;
+  fill: #767676;
 }
 
 .rotated {
@@ -55,7 +55,7 @@
 .label {
   display: flex;
   flex-direction: column;
-  color: #888888;
+  color: #767676;
 }
 
 .label span {
