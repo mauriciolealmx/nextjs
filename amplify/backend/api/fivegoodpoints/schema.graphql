@@ -1,3 +1,14 @@
+type ReasonV2
+  @model
+  @auth(rules: [{ allow: public, operations: [create, read, update] }])
+  @key(name: "byPost", fields: ["postID"]) {
+  id: ID!
+  postID: ID!
+  title: String
+  description: String
+  votes: Int
+}
+
 type Reason {
   title: String
   description: String
@@ -13,4 +24,5 @@ type Post
   content: String
   createdAt: AWSDateTime
   reasons: [Reason]
+  reasonsV2: [ReasonV2] @connection(keyName: "byPost", fields: ["id"])
 }

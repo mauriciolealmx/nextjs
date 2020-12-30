@@ -4,9 +4,10 @@ import { schema } from './schema';
 
 
 
-const { Post, Reason } = initSchema(schema);
+const { ReasonV2, Post, Reason } = initSchema(schema);
 
 export {
+  ReasonV2,
   Post,
   Reason
 };
