@@ -15,6 +15,7 @@
   display: grid;
   border-right: 1px solid #ddd;
   padding-right: 5px;
+  grid-template-rows: 23px 45px 23px auto;
 
   /* B test? */
   /* padding-right: 0; */
@@ -66,4 +67,16 @@
 .reasonTitle {
   margin: 0px;
   padding-left: 10px;
+}
+
+.reasonTitleV2 {
+  margin: 0px;
+  padding-left: 10px;
+  font-weight: bold;
+}
+
+.reasonDescription {
+  margin: 0px;
+  padding-left: 10px;
+  /* font-weight: bold; */
 }

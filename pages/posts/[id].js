@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Head from 'next/head';
 import Markdown from 'react-markdown';
 import { DataStore } from '@aws-amplify/datastore';
@@ -11,7 +11,7 @@ import Fiverr from '../../components/fiverr/fiverr';
 import Date from '../../components/date';
 import Layout from '../../components/layout';
 import Reason from '../../components/reason/reason';
-import { Post } from '../../models';
+import { Post, ReasonV2 } from '../../models';
 
 import utilStyles from '../../styles/utils.module.css';
 
@@ -48,8 +48,9 @@ const fixReasons = [
   },
 ];
 
-export default function PostComp({ post }) {
+export default function PostComp({ post, reasonsV2 }) {
   const [postState, setPost] = useState(post);
+  const [reasonsV2State, setReasonsV2State] = useState(reasonsV2);
   const router = useRouter();
 
   if (router.isFallback) {
@@ -60,26 +61,42 @@ export default function PostComp({ post }) {
   const isFiverr = postState.id === fiverrId;
 
   // TODO: reasonTitle should be id
-  const handleVote = useCallback(async (voteValue, title) => {
-    const original = await DataStore.query(Post, postState.id);
+  const handleVote = useCallback(async (voteValue, title, reasonId) => {
+    if (!reasonId) {
+      const original = await DataStore.query(Post, postState.id);
+      const updatedPost = await DataStore.save(
+        Post.copyOf(original, (item) => {
+          const newReasons = item.reasons.map((cloudReason) => {
+            if (cloudReason.title === title) {
+              cloudReason.votes += voteValue;
+            }
+            return cloudReason;
+          });
 
-    const updatedPost = await DataStore.save(
-      Post.copyOf(original, (item) => {
-        const newReasons = item.reasons.map((cloudReason) => {
-          if (cloudReason.title === title) {
-            cloudReason.votes += voteValue;
-          }
-          return cloudReason;
-        });
+          item.reasons = newReasons;
+          return item;
+        })
+      );
 
-        item.reasons = newReasons;
-        return item;
-      })
-    );
+      const reasonsCopy = [...updatedPost.reasons];
+      const sortedReasons = reasonsCopy.sort((a, b) => b.votes - a.votes);
 
-    const reasonsCopy = [...updatedPost.reasons];
-    const sortedReasons = reasonsCopy.sort((a, b) => b.votes - a.votes);
-    setPost({ ...updatedPost, reasons: sortedReasons });
+      setPost({ ...updatedPost, reasons: sortedReasons });
+    } else {
+      const originalReason = await DataStore.query(ReasonV2, reasonId);
+      await DataStore.save(
+        Post.copyOf(originalReason, (item) => ({
+          ...item,
+          votes: (item.votes += voteValue),
+        }))
+      );
+      const reasons = await DataStore.query(ReasonV2);
+      const newReasonsV2 = reasons.filter(
+        (reason) => reason.postID === post.id
+      );
+
+      setReasonsV2State(newReasonsV2);
+    }
   }, []);
 
   let reasonsCopy;
@@ -88,6 +105,15 @@ export default function PostComp({ post }) {
     reasonsCopy = [...postState.reasons];
     sortedReasons = reasonsCopy.sort((a, b) => b.votes - a.votes);
   }
+
+  let sortedReasonsV2;
+  if (reasonsV2State) {
+    reasonsCopy = [...(reasonsV2State || [])];
+    sortedReasonsV2 = reasonsCopy.sort((a, b) => b.votes - a.votes);
+  }
+
+  const hasSortedReasons =
+    sortedReasons?.length > 0 || sortedReasonsV2?.length > 0;
 
   return (
     <Layout>
@@ -99,9 +125,12 @@ export default function PostComp({ post }) {
         <div className={utilStyles.lightText}>
           <Date lastChangedAtInMS={post._lastChangedAt} />
         </div>
-
-        {sortedReasons?.length > 0 ? (
-          <Reason onVote={handleVote} sortedReasons={sortedReasons} />
+        {hasSortedReasons ? (
+          <Reason
+            onVote={handleVote}
+            sortedReasons={sortedReasons}
+            sortedReasonsV2={sortedReasonsV2}
+          />
         ) : (
           <Markdown children={post.content} />
         )}
@@ -118,11 +147,15 @@ export async function getServerSideProps(req) {
     params: { id },
   } = req;
 
+  const reasons = await DataStore.query(ReasonV2);
+  const postReasons = reasons.filter((reason) => reason.postID === id);
+
   const post = await DataStore.query(Post, id);
 
   return {
     props: {
       post: JSON.parse(JSON.stringify(post)),
+      reasonsV2: JSON.parse(JSON.stringify(postReasons)),
     },
   };
 }
