@@ -125,6 +125,7 @@ export default function PostComp({ post, reasonsV2 }) {
         <div className={utilStyles.lightText}>
           <Date lastChangedAtInMS={post._lastChangedAt} />
         </div>
+        {isFiverr && <Fiverr />}
         {hasSortedReasons ? (
           <Reason
             onVote={handleVote}
