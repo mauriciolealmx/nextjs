@@ -48,6 +48,10 @@ const fixReasons = [
   },
 ];
 
+const replaceItemAtIndex = (arr, index, newValue) => {
+  return [...arr.slice(0, index), newValue, ...arr.slice(index + 1)];
+};
+
 export default function PostComp({ post, reasonsV2 }) {
   const [postState, setPost] = useState(post);
   const [reasonsV2State, setReasonsV2State] = useState(reasonsV2);
@@ -84,18 +88,23 @@ export default function PostComp({ post, reasonsV2 }) {
       setPost({ ...updatedPost, reasons: sortedReasons });
     } else {
       const originalReason = await DataStore.query(ReasonV2, reasonId);
-      await DataStore.save(
+      const updatedReason = await DataStore.save(
         Post.copyOf(originalReason, (item) => ({
           ...item,
           votes: (item.votes += voteValue),
         }))
       );
-      const reasons = await DataStore.query(ReasonV2);
-      const newReasonsV2 = reasons.filter(
-        (reason) => reason.postID === post.id
-      );
 
-      setReasonsV2State(newReasonsV2);
+      setReasonsV2State((prevState) => {
+        const reasonIdx = prevState.findIndex((r) => r.id === updatedReason.id);
+        const newState = replaceItemAtIndex(
+          prevState,
+          reasonIdx,
+          updatedReason
+        );
+
+        return newState;
+      });
     }
   }, []);
 
