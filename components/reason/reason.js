@@ -80,7 +80,8 @@ export default function Reason({ onVote, sortedReasons, sortedReasonsV2 }) {
                   <button
                     className={`${styles.textButton}`}
                     onClick={debounce(
-                      () => handleVote(reason.title, reason.votes, 1, reason.id),
+                      () =>
+                        handleVote(reason.title, reason.votes, 1, reason.id),
                       300
                     )}
                   >
@@ -99,7 +100,8 @@ export default function Reason({ onVote, sortedReasons, sortedReasonsV2 }) {
                   <button
                     className={`${styles.textButton} ${styles.rotated}`}
                     onClick={debounce(
-                      () => handleVote(reason.title, reason.votes, -1, reason.id),
+                      () =>
+                        handleVote(reason.title, reason.votes, -1, reason.id),
                       300
                     )}
                   >
@@ -113,9 +115,13 @@ export default function Reason({ onVote, sortedReasons, sortedReasonsV2 }) {
                   </button>
                 </div>
                 <div>
-                  <p className={styles.reasonTitleV2}>{`${idx + 1}. ${
-                    reason?.title
-                  }`}</p>
+                  <p
+                    className={
+                      reason?.description
+                        ? styles.reasonTitleV2
+                        : styles.reasonDescription
+                    }
+                  >{`${idx + 1}. ${reason?.title}`}</p>
                   <p className={styles.reasonDescription}>
                     {reason?.description}
                   </p>
