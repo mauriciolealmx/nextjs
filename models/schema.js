@@ -103,18 +103,22 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "reasons": {
-                    "name": "reasons",
+                "reasonsV2": {
+                    "name": "reasonsV2",
                     "isArray": true,
                     "type": {
-                        "nonModel": "Reason"
+                        "model": "ReasonV2"
                     },
                     "isRequired": false,
                     "attributes": [],
-                    "isArrayNullable": true
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": "postID"
+                    }
                 },
-                "reasonsV2": {
-                    "name": "reasonsV2",
+                "reasons": {
+                    "name": "reasons",
                     "isArray": true,
                     "type": {
                         "model": "ReasonV2"
@@ -154,40 +158,6 @@ export const schema = {
         }
     },
     "enums": {},
-    "nonModels": {
-        "Reason": {
-            "name": "Reason",
-            "fields": {
-                "title": {
-                    "name": "title",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "description": {
-                    "name": "description",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "votes": {
-                    "name": "votes",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "id": {
-                    "name": "id",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                }
-            }
-        }
-    },
-    "version": "e76a0ed332f897f96629112cc59fa4f7"
+    "nonModels": {},
+    "version": "2d92b2e36af4412da133c6f0df551402"
 };

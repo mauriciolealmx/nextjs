@@ -2,13 +2,7 @@ import { ModelInit, MutableModel, PersistentModelConstructor } from "@aws-amplif
 
 
 
-export declare class Reason {
-  readonly title?: string;
-  readonly description?: string;
-  readonly votes?: number;
-  readonly id?: string;
-  constructor(init: ModelInit<Reason>);
-}
+
 
 export declare class ReasonV2 {
   readonly id: string;
@@ -25,8 +19,8 @@ export declare class Post {
   readonly title?: string;
   readonly content?: string;
   readonly createdAt?: string;
-  readonly reasons?: (Reason | null)[];
   readonly reasonsV2?: (ReasonV2 | null)[];
+  readonly reasons?: (ReasonV2 | null)[];
   constructor(init: ModelInit<Post>);
   static copyOf(source: Post, mutator: (draft: MutableModel<Post>) => MutableModel<Post> | void): Post;
 }
