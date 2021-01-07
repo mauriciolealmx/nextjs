@@ -8,7 +8,7 @@ import { withSSRContext } from 'aws-amplify';
 import BlueHost from '../../components/blueHost/blueHost';
 import Fiverr from '../../components/fiverr/fiverr';
 
-import Date from '../../components/date';
+import Date from 'components/date';
 import Layout from '../../components/layout';
 import Reason from '../../components/reason/reason';
 import { Post, ReasonV2 } from '../../models';
@@ -90,7 +90,7 @@ export default function PostComp({ post, reasonsV2 }) {
     } else {
       const originalReason = await DataStore.query(ReasonV2, reasonId);
       const updatedReason = await DataStore.save(
-        Post.copyOf(originalReason, (item) => ({
+        ReasonV2.copyOf(originalReason, (item) => ({
           ...item,
           votes: (item.votes += voteValue),
         }))
