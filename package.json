@@ -9,7 +9,10 @@
   },
   "dependencies": {
     "aws-amplify": "^3.3.12",
+    "babel-eslint": "^10.1.0",
     "date-fns": "^2.16.1",
+    "eslint": "^7.17.0",
+    "eslint-plugin-react": "^7.22.0",
     "gray-matter": "^4.0.2",
     "next": "10.0.0",
     "react": "17.0.1",

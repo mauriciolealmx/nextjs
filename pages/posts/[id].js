@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import Head from 'next/head';
 import Markdown from 'react-markdown';
 import { DataStore } from '@aws-amplify/datastore';
@@ -18,6 +18,7 @@ import utilStyles from '../../styles/utils.module.css';
 const blueHostId = '0008c2c3-67c3-4df3-8ead-535d6f577650';
 const fiverrId = '2741a20e-3687-4113-a6a1-7004bc8fc5fa';
 
+// eslint-disable-next-line no-unused-vars
 const fixReasons = [
   {
     title:
@@ -142,7 +143,7 @@ export default function PostComp({ post, reasonsV2 }) {
             sortedReasonsV2={sortedReasonsV2}
           />
         ) : (
-          <Markdown children={post.content} />
+          <Markdown>{post.content}</Markdown>
         )}
       </article>
       {isBluehost && <BlueHost />}
