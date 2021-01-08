@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-import UpTriange from '../../svgs/upTriange.svg';
-import { debounce } from './reason.helpers';
+import VoteButton from 'components/VoteButton';
+import { debounce } from 'components/reason/reason.helpers';
 
 import styles from './reason.module.css';
 
@@ -30,51 +30,34 @@ export default function Reason({ onVote, sortedReasonsV2 }) {
     <ol>
       {hasReasons &&
         sortedReasonsV2.map((reason, idx) => {
+          const { id, votes, description } = reason;
+          const reasonCastedVotes = castedVotes[id]?.vote;
+
+          const voteButtonProps = (voteValue) => ({
+            voteValue,
+            isActive: reasonCastedVotes === voteValue,
+            onClick: debounce(() => handleVote(votes, voteValue, id), 300),
+          });
+
           return (
-            <li key={reason.id} className={styles.reasonRoot}>
+            <li key={id} className={styles.reasonRoot}>
               <div className={styles.votingRoot}>
-                <button
-                  className={styles.textButton}
-                  onClick={debounce(
-                    () => handleVote(reason.votes, 1, reason.id),
-                    300
-                  )}
-                >
-                  <UpTriange
-                    className={`${styles.btVote} ${
-                      castedVotes[reason.id]?.vote === 1 ? styles.voted : ''
-                    }`}
-                  />
-                </button>
+                <VoteButton {...voteButtonProps(1)} />
                 <div className={styles.label}>
-                  <span>{reason?.votes}</span>
+                  <span>{votes}</span>
                   <span>votes</span>
                 </div>
-                <button
-                  className={`${styles.textButton} ${styles.rotated}`}
-                  onClick={debounce(
-                    () => handleVote(reason.votes, -1, reason.id),
-                    300
-                  )}
-                >
-                  <UpTriange
-                    className={`${styles.btVote} ${
-                      castedVotes[reason.id]?.vote === -1 ? styles.voted : ''
-                    }`}
-                  />
-                </button>
+                <VoteButton {...voteButtonProps(-1)} />
               </div>
               <div>
                 <p
                   className={
-                    reason?.description
+                    description
                       ? styles.reasonTitleV2
                       : styles.reasonDescription
                   }
                 >{`${idx + 1}. ${reason?.title}`}</p>
-                <p className={styles.reasonDescription}>
-                  {reason?.description}
-                </p>
+                <p className={styles.reasonDescription}>{description}</p>
               </div>
             </li>
           );
