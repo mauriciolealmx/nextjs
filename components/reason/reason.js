@@ -8,39 +8,41 @@ import styles from './reason.module.css';
 export default function Reason({ onVote, sortedReasonsV2 }) {
   const [castedVotes, setCastedVotes] = useState({});
 
-  const handleVote = (title, initialVotes, voteValue, isV2) => {
-    const reasonVotes = castedVotes[title];
+  const handleVote = (initialVotes, voteValue, reasonId) => {
+    const reasonVotes = castedVotes[reasonId];
     if (reasonVotes) {
       const canVoteUp = reasonVotes.vote !== voteValue;
       if (canVoteUp) {
         reasonVotes.vote += voteValue;
-        onVote(voteValue, title, isV2);
+        onVote(voteValue, reasonId, reasonId);
       }
     }
 
     if (!reasonVotes) {
-      castedVotes[title] = { vote: voteValue, initialVotes };
-      onVote(voteValue, title, isV2);
+      castedVotes[reasonId] = { vote: voteValue, initialVotes };
+      onVote(voteValue, reasonId, reasonId);
     }
   };
 
+  const hasReasons = sortedReasonsV2.length > 0;
+
   return (
     <ol>
-      {sortedReasonsV2.length > 0 &&
+      {hasReasons &&
         sortedReasonsV2.map((reason, idx) => {
           return (
-            <li key={reason.title} className={styles.reasonRoot}>
+            <li key={reason.id} className={styles.reasonRoot}>
               <div className={styles.votingRoot}>
                 <button
-                  className={`${styles.textButton}`}
+                  className={styles.textButton}
                   onClick={debounce(
-                    () => handleVote(reason.title, reason.votes, 1, reason.id),
+                    () => handleVote(reason.votes, 1, reason.id),
                     300
                   )}
                 >
                   <UpTriange
                     className={`${styles.btVote} ${
-                      castedVotes[reason.title]?.vote === 1 ? styles.voted : ''
+                      castedVotes[reason.id]?.vote === 1 ? styles.voted : ''
                     }`}
                   />
                 </button>
@@ -51,13 +53,13 @@ export default function Reason({ onVote, sortedReasonsV2 }) {
                 <button
                   className={`${styles.textButton} ${styles.rotated}`}
                   onClick={debounce(
-                    () => handleVote(reason.title, reason.votes, -1, reason.id),
+                    () => handleVote(reason.votes, -1, reason.id),
                     300
                   )}
                 >
                   <UpTriange
                     className={`${styles.btVote} ${
-                      castedVotes[reason.title]?.vote === -1 ? styles.voted : ''
+                      castedVotes[reason.id]?.vote === -1 ? styles.voted : ''
                     }`}
                   />
                 </button>
