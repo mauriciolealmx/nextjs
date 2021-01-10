@@ -82,6 +82,7 @@ export default function PostComp({ post, reasonsV2 }) {
         <div className={utilStyles.lightText}>
           <Date lastChangedAtInMS={post._lastChangedAt} />
         </div>
+        {isBluehost && <BlueHost />}
         {isFiverr && <Fiverr />}
         {hasSortedReasons ? (
           <Reason onVote={handleVote} sortedReasonsV2={sortedReasonsV2} />
