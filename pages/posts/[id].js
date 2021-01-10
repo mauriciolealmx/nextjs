@@ -8,12 +8,14 @@ import { withSSRContext } from 'aws-amplify';
 import BlueHost from 'components/blueHost/blueHost';
 import Fiverr from 'components/fiverr/fiverr';
 
+import * as gtag from 'lib/gtag';
 import Date from 'components/date';
 import Layout from 'components/layout';
 import Reason from 'components/reason/reason';
 import { Post, ReasonV2 } from 'models';
 
 import utilStyles from 'styles/utils.module.css';
+import styles from './post.module.css';
 
 const blueHostId = '0008c2c3-67c3-4df3-8ead-535d6f577650';
 const fiverrId = '2741a20e-3687-4113-a6a1-7004bc8fc5fa';
@@ -51,6 +53,16 @@ export default function PostComp({ post, reasonsV2 }) {
     });
   }, []);
 
+  const handleClick = (value) => {
+    gtag.event({
+      value,
+      action: 'click',
+      category: 'ab-testing',
+      label: 'show-more-vs-add-reason',
+    });
+    console.log({ value });
+  };
+
   let reasonsCopy;
   let sortedReasonsV2;
   if (reasonsV2State) {
@@ -77,6 +89,20 @@ export default function PostComp({ post, reasonsV2 }) {
           <Markdown>{post.content}</Markdown>
         )}
       </article>
+      <div className={styles.actionsRoot}>
+        <button
+          onClick={() => handleClick('show more')}
+          className={styles.textButton}
+        >
+          Show more
+        </button>
+        <button
+          onClick={() => handleClick('add reason')}
+          className={styles.addReason}
+        >
+          Add Reason
+        </button>
+      </div>
       {isBluehost && <BlueHost />}
       {isFiverr && <Fiverr />}
     </Layout>
