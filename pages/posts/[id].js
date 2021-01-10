@@ -82,6 +82,17 @@ export default function PostComp({ post, reasonsV2 }) {
         <div className={utilStyles.lightText}>
           <Date lastChangedAtInMS={post._lastChangedAt} />
         </div>
+        {isFiverr && (
+          <div className={styles.disclaimerRoot}>
+            <div>Disclaimer</div>
+            <p>
+              A <strong>20% </strong> off is applied to your{' '}
+              <strong>first time purchase</strong> when using the Fiverr{' '}
+              <strong>link below</strong>. Furthermore, this website earns a
+              commission when making that first purchase.
+            </p>
+          </div>
+        )}
         {isBluehost && <BlueHost />}
         {isFiverr && <Fiverr />}
         {hasSortedReasons ? (
