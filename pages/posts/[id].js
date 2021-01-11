@@ -53,14 +53,12 @@ export default function PostComp({ post, reasonsV2 }) {
     });
   }, []);
 
-  const handleClick = (value) => {
+  const handleClick = (label) => {
     gtag.event({
-      value,
+      label,
       action: 'click',
       category: 'ab-testing',
-      label: 'show-more-vs-add-reason',
     });
-    console.log({ value });
   };
 
   let reasonsCopy;
