@@ -1,0 +1,18 @@
+.disclaimerRoot {
+  box-shadow: 0px 1px 5px 1px rgb(0 0 0 / 30%);
+  margin-top: 10px;
+  border-radius: 4px;
+  border: 1px solid black;
+  padding: 10px;
+}
+
+.disclaimerRoot div {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.disclaimerRoot p {
+  font-size: 16px;
+  margin: 0px;
+  color: #707070;
+}

@@ -9,6 +9,7 @@ import BlueHost from 'components/blueHost/blueHost';
 import Fiverr from 'components/fiverr/fiverr';
 
 import * as gtag from 'lib/gtag';
+import CardDisclaimer from 'components/cardDisclaimer/cardDisclaimer';
 import Date from 'components/date';
 import Layout from 'components/layout';
 import Reasons from 'components/reason/reason';
@@ -24,8 +25,8 @@ const replaceItemAtIndex = (arr, index, newValue) => {
   return [...arr.slice(0, index), newValue, ...arr.slice(index + 1)];
 };
 
-export default function PostComp({ post, reasonsV2 }) {
-  const [reasonsV2State, setReasonsV2State] = useState(reasonsV2);
+export default function PostComp({ post, reasons }) {
+  const [reasonsState, setReasonsState] = useState(reasons);
   const router = useRouter();
 
   if (router.isFallback) {
@@ -35,7 +36,6 @@ export default function PostComp({ post, reasonsV2 }) {
   const isBluehost = post.id === blueHostId;
   const isFiverr = post.id === fiverrId;
 
-  // TODO: reasonTitle should be id
   const handleVote = useCallback(async (voteValue, reasonId) => {
     const originalReason = await DataStore.query(ReasonV2, reasonId);
     const updatedReason = await DataStore.save(
@@ -45,7 +45,7 @@ export default function PostComp({ post, reasonsV2 }) {
       }))
     );
 
-    setReasonsV2State((prevState) => {
+    setReasonsState((prevState) => {
       const reasonIdx = prevState.findIndex((r) => r.id === updatedReason.id);
       const newState = replaceItemAtIndex(prevState, reasonIdx, updatedReason);
 
@@ -61,14 +61,8 @@ export default function PostComp({ post, reasonsV2 }) {
     });
   };
 
-  let reasonsCopy;
-  let sortedReasonsV2;
-  if (reasonsV2State) {
-    reasonsCopy = [...(reasonsV2State || [])];
-    sortedReasonsV2 = reasonsCopy.sort((a, b) => b.votes - a.votes);
-  }
-
-  const hasSortedReasons = sortedReasonsV2?.length > 0;
+  const hasReasons = reasonsState?.length > 0;
+  const sortedReasons = reasonsState?.sort((a, b) => b.votes - a.votes);
 
   return (
     <Layout>
@@ -80,21 +74,11 @@ export default function PostComp({ post, reasonsV2 }) {
         <div className={utilStyles.lightText}>
           <Date lastChangedAtInMS={post._lastChangedAt} />
         </div>
-        {isFiverr && (
-          <div className={styles.disclaimerRoot}>
-            <div>Disclaimer</div>
-            <p>
-              A <strong>20% </strong> off is applied to your{' '}
-              <strong>first time purchase</strong> when using the Fiverr{' '}
-              <strong>link below</strong>. Furthermore, this website earns a
-              commission when making that first purchase.
-            </p>
-          </div>
-        )}
         {isBluehost && <BlueHost />}
+        {isFiverr && <CardDisclaimer title="Disclaimer" />}
         {isFiverr && <Fiverr />}
-        {hasSortedReasons ? (
-          <Reasons onVote={handleVote} sortedReasonsV2={sortedReasonsV2} />
+        {hasReasons ? (
+          <Reasons onVote={handleVote} sortedReasonsV2={sortedReasons} />
         ) : (
           <Markdown>{post.content}</Markdown>
         )}
@@ -133,7 +117,7 @@ export async function getServerSideProps(req) {
   return {
     props: {
       post: JSON.parse(JSON.stringify(post)),
-      reasonsV2: JSON.parse(JSON.stringify(postReasons)),
+      reasons: JSON.parse(JSON.stringify(postReasons)),
     },
   };
 }
