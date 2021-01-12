@@ -14,13 +14,13 @@ export default function Reason({ onVote, sortedReasonsV2 }) {
       const canVoteUp = reasonVotes.vote !== voteValue;
       if (canVoteUp) {
         reasonVotes.vote += voteValue;
-        onVote(voteValue, reasonId, reasonId);
+        onVote(voteValue, reasonId);
       }
     }
 
     if (!reasonVotes) {
       castedVotes[reasonId] = { vote: voteValue, initialVotes };
-      onVote(voteValue, reasonId, reasonId);
+      onVote(voteValue, reasonId);
     }
   };
 

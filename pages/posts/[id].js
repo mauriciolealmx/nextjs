@@ -36,7 +36,7 @@ export default function PostComp({ post, reasonsV2 }) {
   const isFiverr = post.id === fiverrId;
 
   // TODO: reasonTitle should be id
-  const handleVote = useCallback(async (voteValue, title, reasonId) => {
+  const handleVote = useCallback(async (voteValue, reasonId) => {
     const originalReason = await DataStore.query(ReasonV2, reasonId);
     const updatedReason = await DataStore.save(
       ReasonV2.copyOf(originalReason, (item) => ({
