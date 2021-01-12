@@ -11,7 +11,7 @@ import Fiverr from 'components/fiverr/fiverr';
 import * as gtag from 'lib/gtag';
 import Date from 'components/date';
 import Layout from 'components/layout';
-import Reason from 'components/reason/reason';
+import Reasons from 'components/reason/reason';
 import { Post, ReasonV2 } from 'models';
 
 import utilStyles from 'styles/utils.module.css';
@@ -94,7 +94,7 @@ export default function PostComp({ post, reasonsV2 }) {
         {isBluehost && <BlueHost />}
         {isFiverr && <Fiverr />}
         {hasSortedReasons ? (
-          <Reason onVote={handleVote} sortedReasonsV2={sortedReasonsV2} />
+          <Reasons onVote={handleVote} sortedReasonsV2={sortedReasonsV2} />
         ) : (
           <Markdown>{post.content}</Markdown>
         )}

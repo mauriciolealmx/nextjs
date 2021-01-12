@@ -5,7 +5,7 @@ import { debounce } from 'components/reason/reason.helpers';
 
 import styles from './reason.module.css';
 
-export default function Reason({ onVote, sortedReasonsV2 }) {
+export default function Reasons({ onVote, sortedReasonsV2 }) {
   const [castedVotes, setCastedVotes] = useState({});
 
   const handleVote = (initialVotes, voteValue, reasonId) => {
@@ -13,14 +13,23 @@ export default function Reason({ onVote, sortedReasonsV2 }) {
     if (reasonVotes) {
       const canVoteUp = reasonVotes.vote !== voteValue;
       if (canVoteUp) {
-        reasonVotes.vote += voteValue;
         onVote(voteValue, reasonId);
+        setCastedVotes((prevState) => ({
+          ...prevState,
+          [reasonId]: {
+            ...reasonVotes,
+            vote: reasonVotes.vote + voteValue,
+          },
+        }));
       }
     }
 
     if (!reasonVotes) {
-      castedVotes[reasonId] = { vote: voteValue, initialVotes };
       onVote(voteValue, reasonId);
+      setCastedVotes((prevState) => ({
+        ...prevState,
+        [reasonId]: { vote: voteValue, initialVotes },
+      }));
     }
   };
 
