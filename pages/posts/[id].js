@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react';
 import Head from 'next/head';
-import Markdown from 'react-markdown';
 import { useRouter } from 'next/router';
 
 import BlueHost from 'components/blueHost/blueHost';
@@ -75,10 +74,8 @@ export default function PostComp({ post, reasons }) {
         {isBluehost && <BlueHost />}
         {isFiverr && <CardDisclaimer title="Disclaimer" />}
         {isFiverr && <Fiverr />}
-        {hasReasons ? (
+        {hasReasons && (
           <Reasons onVote={handleVote} sortedReasonsV2={sortedReasons} />
-        ) : (
-          <Markdown>{post.content}</Markdown>
         )}
       </article>
       <div className={styles.actionsRoot}>
