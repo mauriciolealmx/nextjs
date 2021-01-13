@@ -2,21 +2,15 @@ import { useCallback, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
-import BlueHost from 'components/blueHost/blueHost';
-import Fiverr from 'components/fiverr/fiverr';
-
 import * as gtag from 'lib/gtag';
 import * as postsClient from 'apis/posts.api';
-import CardDisclaimer from 'components/cardDisclaimer/cardDisclaimer';
 import Date from 'components/date';
 import Layout from 'components/layout';
 import Reasons from 'components/reason/reason';
+import affiliateMap from './affiliateMap';
 
 import utilStyles from 'styles/utils.module.css';
 import styles from './post.module.css';
-
-const blueHostId = '0008c2c3-67c3-4df3-8ead-535d6f577650';
-const fiverrId = '2741a20e-3687-4113-a6a1-7004bc8fc5fa';
 
 const replaceItemAtIndex = (arr, index, newValue) => {
   return [...arr.slice(0, index), newValue, ...arr.slice(index + 1)];
@@ -29,9 +23,6 @@ export default function PostComp({ post, reasons }) {
   if (router.isFallback) {
     return <div>Loading...</div>;
   }
-
-  const isBluehost = post.id === blueHostId;
-  const isFiverr = post.id === fiverrId;
 
   const handleVote = useCallback(async (voteValue, reasonId) => {
     const updatedReason = await postsClient.updateReasonById(
@@ -61,6 +52,8 @@ export default function PostComp({ post, reasons }) {
   const hasReasons = reasonsState?.length > 0;
   const sortedReasons = reasonsState?.sort((a, b) => b.votes - a.votes);
 
+  const { renderer, disclaimer } = affiliateMap[post.id];
+
   return (
     <Layout>
       <Head>
@@ -71,9 +64,8 @@ export default function PostComp({ post, reasons }) {
         <div className={utilStyles.lightText}>
           <Date lastChangedAtInMS={post._lastChangedAt} />
         </div>
-        {isBluehost && <BlueHost />}
-        {isFiverr && <CardDisclaimer title="Disclaimer" />}
-        {isFiverr && <Fiverr />}
+        {renderer}
+        {disclaimer}
         {hasReasons && (
           <Reasons onVote={handleVote} sortedReasonsV2={sortedReasons} />
         )}
@@ -92,8 +84,7 @@ export default function PostComp({ post, reasons }) {
           Add Reason
         </button>
       </div>
-      {isBluehost && <BlueHost />}
-      {isFiverr && <Fiverr />}
+      {renderer}
     </Layout>
   );
 }
