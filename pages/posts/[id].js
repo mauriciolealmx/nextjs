@@ -1,19 +1,17 @@
 import { useCallback, useState } from 'react';
 import Head from 'next/head';
 import Markdown from 'react-markdown';
-import { DataStore } from '@aws-amplify/datastore';
 import { useRouter } from 'next/router';
-import { withSSRContext } from 'aws-amplify';
 
 import BlueHost from 'components/blueHost/blueHost';
 import Fiverr from 'components/fiverr/fiverr';
 
 import * as gtag from 'lib/gtag';
+import * as postsClient from 'apis/posts.api';
 import CardDisclaimer from 'components/cardDisclaimer/cardDisclaimer';
 import Date from 'components/date';
 import Layout from 'components/layout';
 import Reasons from 'components/reason/reason';
-import { Post, ReasonV2 } from 'models';
 
 import utilStyles from 'styles/utils.module.css';
 import styles from './post.module.css';
@@ -37,12 +35,12 @@ export default function PostComp({ post, reasons }) {
   const isFiverr = post.id === fiverrId;
 
   const handleVote = useCallback(async (voteValue, reasonId) => {
-    const originalReason = await DataStore.query(ReasonV2, reasonId);
-    const updatedReason = await DataStore.save(
-      ReasonV2.copyOf(originalReason, (item) => ({
-        ...item,
-        votes: (item.votes += voteValue),
-      }))
+    const updatedReason = await postsClient.updateReasonById(
+      reasonId,
+      (prevState) => ({
+        ...prevState,
+        votes: (prevState.votes += voteValue),
+      })
     );
 
     setReasonsState((prevState) => {
@@ -103,16 +101,10 @@ export default function PostComp({ post, reasons }) {
   );
 }
 
-export async function getServerSideProps(req) {
-  const { DataStore } = withSSRContext(req);
-  const {
-    params: { id },
-  } = req;
-
-  const reasons = await DataStore.query(ReasonV2);
-  const postReasons = reasons.filter((reason) => reason.postID === id);
-
-  const post = await DataStore.query(Post, id);
+export async function getServerSideProps({ params }) {
+  const { id } = params;
+  const postReasons = await postsClient.getReasonsByPostId(id);
+  const post = await postsClient.getPostById(id);
 
   return {
     props: {
