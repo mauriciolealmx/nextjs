@@ -5,10 +5,8 @@ export const getPostById = (id) => {
   return DataStore.query(Post, id);
 };
 
-export const getReasonsByPostId = async (id) => {
-  const reasons = await DataStore.query(ReasonV2);
-  const postReasons = reasons.filter((reason) => reason.postID === id);
-  return postReasons;
+export const getReasonsByPostId = (id) => {
+  return DataStore.query(ReasonV2, (r) => r.postID('eq', id));
 };
 
 export const getReasonById = (id) => {
