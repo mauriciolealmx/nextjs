@@ -17,3 +17,14 @@ export const updateReasonById = async (id, callback) => {
   const originalReason = await getReasonById(id);
   return DataStore.save(ReasonV2.copyOf(originalReason, callback));
 };
+
+export const createReasonForPost = ({ postID, title, description }) => {
+  return DataStore.save(
+    new ReasonV2({
+      postID,
+      title,
+      description,
+      votes: 0,
+    })
+  );
+};

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
@@ -6,6 +6,7 @@ import * as gtag from 'lib/gtag';
 import * as postsClient from 'apis/posts.api';
 import Date from 'components/date';
 import Layout from 'components/layout';
+import Modal from 'components/modal';
 import Reasons from 'components/reason/reason';
 import affiliateMap from './affiliateMap';
 
@@ -16,13 +17,26 @@ const replaceItemAtIndex = (arr, index, newValue) => {
   return [...arr.slice(0, index), newValue, ...arr.slice(index + 1)];
 };
 
-export default function PostComp({ post, reasons }) {
-  const [reasonsState, setReasonsState] = useState(reasons);
+export default function PostComp({ id }) {
+  const [post, setPost] = useState(null);
+  const [reasonsState, setReasonsState] = useState(null);
+  const [open, setOpen] = useState(false);
   const router = useRouter();
 
   if (router.isFallback) {
     return <div>Loading...</div>;
   }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const postReasons = await postsClient.getReasonsByPostId(id);
+      const post = await postsClient.getPostById(id);
+      setPost(post);
+      setReasonsState(postReasons);
+    };
+
+    fetchData();
+  }, []);
 
   const handleVote = useCallback(async (voteValue, reasonId) => {
     const updatedReason = await postsClient.updateReasonById(
@@ -49,12 +63,27 @@ export default function PostComp({ post, reasons }) {
     });
   };
 
+  const handleAddReasonModal = () => {
+    setOpen(true);
+    gtag.event({
+      label: 'add-reason',
+      action: 'click',
+      category: 'ab-testing',
+    });
+  };
+
+  const handleAddReason = async () => {
+    const postReasons = await postsClient.getReasonsByPostId(post.id);
+    setReasonsState(postReasons);
+  };
+
   const hasReasons = reasonsState?.length > 0;
   const sortedReasons = reasonsState?.sort((a, b) => b.votes - a.votes);
 
-  const { renderer, disclaimer } = affiliateMap[post.id];
+  const { renderer, disclaimer } = affiliateMap[post?.id] || {};
+  console.log({ post });
 
-  return (
+  return post?.id ? (
     <Layout>
       <Head>
         <title>{post.title}</title>
@@ -78,26 +107,33 @@ export default function PostComp({ post, reasons }) {
           Show more
         </button>
         <button
-          onClick={() => handleClick('add reason')}
+          onClick={() => handleAddReasonModal()}
           className={styles.addReason}
         >
           Add Reason
         </button>
       </div>
       {renderer}
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        postID={post.id}
+        onAddReason={handleAddReason}
+      />
     </Layout>
+  ) : (
+    <>Loading...</>
   );
 }
 
 export async function getServerSideProps({ params }) {
   const { id } = params;
-  const postReasons = await postsClient.getReasonsByPostId(id);
-  const post = await postsClient.getPostById(id);
+  // const postReasons = await postsClient.getReasonsByPostId(id);
+  // const post = await postsClient.getPostById(id);
 
   return {
     props: {
-      post: JSON.parse(JSON.stringify(post)),
-      reasons: JSON.parse(JSON.stringify(postReasons)),
+      id,
     },
   };
 }
