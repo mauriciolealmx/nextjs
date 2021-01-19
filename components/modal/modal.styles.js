@@ -23,11 +23,26 @@ export default makeStyles((theme) => ({
     width: '28ch',
   },
 
+  cancelButton: {
+    marginTop: '10px',
+    padding: '9px 20px',
+    backgroundColor: '#aa0000',
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+
   createButton: {
-    float: 'right',
+    fontWeight: 'bold',
+    marginLeft: '10px',
     marginTop: '10px',
     padding: '9px 20px',
     backgroundColor: '#1d3e54',
     color: '#fff',
+  },
+
+  actionsRoot: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
   },
 }));

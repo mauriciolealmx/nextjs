@@ -6,7 +6,6 @@ import * as gtag from 'lib/gtag';
 import * as postsClient from 'apis/posts.api';
 import Date from 'components/date';
 import Layout from 'components/layout';
-import Modal from 'components/modal';
 import Reasons from 'components/reason/reason';
 import affiliateMap from './affiliateMap';
 
@@ -20,7 +19,6 @@ const replaceItemAtIndex = (arr, index, newValue) => {
 export default function PostComp({ id }) {
   const [post, setPost] = useState(null);
   const [reasonsState, setReasonsState] = useState(null);
-  const [open, setOpen] = useState(false);
   const router = useRouter();
 
   if (router.isFallback) {
@@ -63,25 +61,10 @@ export default function PostComp({ id }) {
     });
   };
 
-  const handleAddReasonModal = () => {
-    setOpen(true);
-    gtag.event({
-      label: 'add-reason',
-      action: 'click',
-      category: 'ab-testing',
-    });
-  };
-
-  const handleAddReason = async () => {
-    const postReasons = await postsClient.getReasonsByPostId(post.id);
-    setReasonsState(postReasons);
-  };
-
   const hasReasons = reasonsState?.length > 0;
   const sortedReasons = reasonsState?.sort((a, b) => b.votes - a.votes);
 
   const { renderer, disclaimer } = affiliateMap[post?.id] || {};
-  console.log({ post });
 
   return post?.id ? (
     <Layout>
@@ -107,19 +90,13 @@ export default function PostComp({ id }) {
           Show more
         </button>
         <button
-          onClick={() => handleAddReasonModal()}
+          onClick={() => router.push(`/reasons/create/${id}`)}
           className={styles.addReason}
         >
           Add Reason
         </button>
       </div>
       {renderer}
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        postID={post.id}
-        onAddReason={handleAddReason}
-      />
     </Layout>
   ) : (
     <>Loading...</>
