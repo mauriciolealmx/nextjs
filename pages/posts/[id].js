@@ -7,7 +7,7 @@ import * as postsClient from 'apis/posts.api';
 import Date from 'components/date';
 import Layout from 'components/layout';
 import Reasons from 'components/reason/reason';
-import affiliateMap from './affiliateMap';
+import affiliateMap from 'helpers/affiliateMap';
 
 import utilStyles from 'styles/utils.module.css';
 import styles from './post.module.css';
@@ -66,40 +66,42 @@ export default function PostComp({ id }) {
 
   const { renderer, disclaimer } = affiliateMap[post?.id] || {};
 
-  return post?.id ? (
-    <Layout>
-      <Head>
-        <title>{post.title}</title>
-      </Head>
-      <article>
-        <h1 className={utilStyles.headingMd}>{post.title}</h1>
-        <div className={utilStyles.lightText}>
-          <Date lastChangedAtInMS={post._lastChangedAt} />
+  const renderLloading = () => !post?.id && <>Loading...</>;
+
+  return (
+    renderLloading() || (
+      <Layout>
+        <Head>
+          <title>{post.title}</title>
+        </Head>
+        <article>
+          <h1 className={utilStyles.headingMd}>{post.title}</h1>
+          <div className={utilStyles.lightText}>
+            <Date lastChangedAtInMS={post._lastChangedAt} />
+          </div>
+          {renderer}
+          {disclaimer}
+          {hasReasons && (
+            <Reasons onVote={handleVote} sortedReasonsV2={sortedReasons} />
+          )}
+        </article>
+        <div className={styles.actionsRoot}>
+          <button
+            onClick={() => handleClick('show more')}
+            className={styles.textButton}
+          >
+            Show more
+          </button>
+          <button
+            onClick={() => router.push(`/reasons/create/${id}`)}
+            className={styles.addReason}
+          >
+            Add Reason
+          </button>
         </div>
         {renderer}
-        {disclaimer}
-        {hasReasons && (
-          <Reasons onVote={handleVote} sortedReasonsV2={sortedReasons} />
-        )}
-      </article>
-      <div className={styles.actionsRoot}>
-        <button
-          onClick={() => handleClick('show more')}
-          className={styles.textButton}
-        >
-          Show more
-        </button>
-        <button
-          onClick={() => router.push(`/reasons/create/${id}`)}
-          className={styles.addReason}
-        >
-          Add Reason
-        </button>
-      </div>
-      {renderer}
-    </Layout>
-  ) : (
-    <>Loading...</>
+      </Layout>
+    )
   );
 }
 
